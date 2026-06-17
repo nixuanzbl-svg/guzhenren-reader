@@ -23,18 +23,18 @@ powershell -ExecutionPolicy Bypass -File ".\tools\Publish-GitHubPages.ps1" -Remo
 每做完新章节 PDF 后，在本目录运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File ".\tools\Publish-GitHubPages.ps1"
-```
-
-脚本会重新生成 `docs/data/chapters.json`、复制 `D:\蛊真人漫画\pdf` 里的 PDF，并提交推送。重复章节会自动在书架里优先显示较新的 PDF。
-
-如果 `git push` 因网络中断失败，可以走备用 API 发布：
-
-```powershell
 powershell -ExecutionPolicy Bypass -File ".\tools\Publish-GitHubViaApi.ps1"
 ```
 
-备用脚本会读取当前 Windows 凭据管理器里的 GitHub 登录令牌，只上传发生变化的文件，并自动尝试启用 GitHub Pages。
+脚本会重新生成 `docs/data/chapters.json`、复制 `D:\蛊真人漫画\pdf` 里的 PDF、提交本地变更、只上传发生变化的文件，并自动尝试启用 GitHub Pages。重复章节会自动在书架里优先显示较新的 PDF。
+
+如果你只想走普通 git 推送，也可以运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ".\tools\Publish-GitHubPages.ps1"
+```
+
+但当前这台机器的 `git push` 曾经在大包传输时断线，所以优先使用 API 发布脚本。
 
 ## 读者安装
 

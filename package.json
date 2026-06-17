@@ -5,7 +5,7 @@
   "description": "A WeChat Mini Program comic reader for imported PDF comics.",
   "scripts": {
     "build:static": "node tools/build-static-site.cjs",
-    "check": "node tools/check-js.cjs && node --check web/app.js && node --check web/admin.js && node --check web/sw.js && node --check tools/build-static-site.cjs"
+    "check": "node tools/check-js.cjs && node --check web/app.js && node --check web/admin.js && node --check web/sw.js && node --check tools/build-static-site.cjs && node --check tools/github-api-publish.cjs"
   },
   "dependencies": {
     "pdfjs-dist": "2.16.105"
