@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="蛊真人漫画">
+  <rect width="512" height="512" rx="112" fill="#151515"/>
+  <path d="M128 112h256c22 0 40 18 40 40v216c0 22-18 40-40 40H128c-22 0-40-18-40-40V152c0-22 18-40 40-40Z" fill="#efe8d8"/>
+  <path d="M140 156h232c8 0 14 6 14 14v34H126v-34c0-8 6-14 14-14Z" fill="#8d2f27"/>
+  <path d="M154 250h204M154 304h168M154 358h124" fill="none" stroke="#151515" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="348" cy="344" r="42" fill="#151515"/>
+  <path d="M322 344c18-30 35-30 52 0-17 30-34 30-52 0Z" fill="#efe8d8"/>
+  <path d="M255 156v252" stroke="#151515" stroke-width="10" stroke-opacity=".18"/>
+</svg>

@@ -1,0 +1,70 @@
+<view class="library-page safe-area-bottom">
+  <view class="topbar">
+    <view class="brand-mark">墨</view>
+    <view class="brand-copy">
+      <text class="brand-title">墨卷</text>
+      <text class="brand-subtitle">私人漫画书架</text>
+    </view>
+  </view>
+
+  <view class="hero">
+    <view class="hero-copy">
+      <text class="hero-kicker">PDF 漫画阅读器</text>
+      <text class="hero-title">蛊真人漫画</text>
+      <text class="hero-subtitle">导入 PDF 后缓存到本机，继续阅读会回到上次位置。</text>
+    </view>
+    <view class="hero-stat">
+      <text class="stat-number">{{stats.count}}</text>
+      <text class="stat-label">本</text>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button class="primary-action" bindtap="handleImportPdf">
+      <text class="action-icon">+</text>
+      <text>导入 PDF</text>
+    </button>
+    <button class="secondary-action" bindtap="refreshLibrary">刷新</button>
+  </view>
+
+  <view wx:if="{{recentBook}}" class="continue-panel" data-id="{{recentBook.id}}" bindtap="openBook">
+    <view class="continue-cover" style="{{recentBook.coverStyle}}">
+      <text>{{recentBook.chapterLabel}}</text>
+    </view>
+    <view class="continue-main">
+      <text class="panel-label">继续阅读</text>
+      <text class="continue-title">{{recentBook.title}}</text>
+      <text class="continue-meta">{{recentBook.progressText}} · 第 {{recentBook.lastPage}} 页</text>
+      <view class="progress-track">
+        <view class="progress-value" style="width: {{recentBook.progressText}};"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <text>书架</text>
+    <text class="section-meta">{{stats.totalSize}}</text>
+  </view>
+
+  <view wx:if="{{books.length}}" class="book-list">
+    <view wx:for="{{books}}" wx:key="id" class="book-card" data-id="{{item.id}}" bindtap="openBook">
+      <view class="book-cover" style="{{item.coverStyle}}">
+        <text>{{item.chapterLabel}}</text>
+      </view>
+      <view class="book-info">
+        <text class="book-title">{{item.title}}</text>
+        <text class="book-meta">{{item.sizeText}} · {{item.dateText}}</text>
+        <view class="book-bottom">
+          <text>{{item.progressText}}</text>
+          <button class="pdf-button" data-id="{{item.id}}" catchtap="openSystemPdf">PDF</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-state">
+    <view class="empty-icon">PDF</view>
+    <text class="empty-title">还没有导入漫画</text>
+    <text class="empty-subtitle">把漫画 PDF 发到微信，再从这里导入。</text>
+  </view>
+</view>

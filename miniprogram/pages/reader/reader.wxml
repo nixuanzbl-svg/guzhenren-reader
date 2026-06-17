@@ -1,0 +1,145 @@
+<view class="reader-page theme-{{settings.theme}} {{settings.night ? 'night' : ''}} {{settings.eyeCare ? 'eye-care' : ''}}">
+  <view class="reader-top {{chromeVisible ? 'visible' : ''}}">
+    <button class="icon-button" bindtap="goBack">‹</button>
+    <view class="title-wrap">
+      <text class="reader-title">{{book.title}}</text>
+      <text class="reader-progress">第 {{currentPage}} / {{pageCount || 1}} 页 · {{progressText}}</text>
+    </view>
+    <button class="text-button" bindtap="openSystemPdf">PDF</button>
+  </view>
+
+  <scroll-view
+    class="reader-scroll"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    scroll-top="{{targetScrollTop}}"
+    bindscroll="handleScroll"
+    bindtap="toggleChrome"
+  >
+    <view class="scroll-content" style="padding-top: {{topInset}}px; padding-bottom: {{bottomInset}}px;">
+      <block wx:if="{{rendererReady}}">
+        <view
+          wx:for="{{pages}}"
+          wx:key="pageNumber"
+          class="page-shell"
+          style="width: {{item.displayWidth}}px; height: {{item.displayHeight}}px; margin-bottom: {{settings.pageGap}}px;"
+        >
+          <canvas
+            type="2d"
+            id="pdfCanvas{{item.pageNumber}}"
+            class="pdf-canvas"
+            style="width: {{item.displayWidth}}px; height: {{item.displayHeight}}px;"
+          ></canvas>
+          <view wx:if="{{item.status === 'pending' || item.status === 'rendering'}}" class="page-state">
+            <text>{{item.status === 'rendering' ? '渲染中' : '等待渲染'}}</text>
+          </view>
+          <view wx:if="{{item.status === 'error'}}" class="page-state error">
+            <text>本页渲染失败</text>
+          </view>
+        </view>
+      </block>
+
+      <view wx:else class="fallback">
+        <text class="fallback-title">{{loadingText || 'PDF 渲染未就绪'}}</text>
+        <text class="fallback-body">{{rendererError}}</text>
+        <button class="fallback-button" bindtap="openSystemPdf">用系统 PDF 打开</button>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="brightness-layer" style="background: rgba(0, 0, 0, {{brightnessMask}});"></view>
+
+  <view class="reader-bottom {{chromeVisible ? 'visible' : ''}}">
+    <button class="nav-item" bindtap="showCatalog">
+      <text class="nav-icon">☰</text>
+      <text>目录</text>
+    </button>
+    <button class="nav-item" bindtap="toggleNight">
+      <text class="nav-icon">{{settings.night ? '☀' : '☾'}}</text>
+      <text>{{settings.night ? '日间' : '夜间'}}</text>
+    </button>
+    <button class="nav-item" bindtap="toggleSettings">
+      <text class="nav-icon">⌾</text>
+      <text>设置</text>
+    </button>
+  </view>
+
+  <view wx:if="{{settingsVisible}}" class="settings-mask" bindtap="toggleSettings"></view>
+  <view class="settings-panel {{settingsVisible ? 'visible' : ''}}">
+    <view class="settings-grid">
+      <view class="setting-control wide">
+        <slider
+          min="45"
+          max="100"
+          value="{{settings.brightness}}"
+          activeColor="#202120"
+          backgroundColor="#d9d5cc"
+          block-size="22"
+          bindchanging="changeBrightness"
+          bindchange="changeBrightness"
+        />
+        <text class="control-symbol">☀</text>
+      </view>
+
+      <button class="setting-control" bindtap="toggleEyeCare">
+        <text>护眼</text>
+        <view class="switch {{settings.eyeCare ? 'on' : ''}}"></view>
+      </button>
+
+      <view class="setting-control wide font-control">
+        <button class="font-mark small" bindtap="changePageWidth" data-step="-4">A-</button>
+        <text class="font-value">{{settings.pageWidth}}%</text>
+        <button class="font-mark" bindtap="changePageWidth" data-step="4">A+</button>
+      </view>
+
+      <button class="setting-control" bindtap="fitToWidth">
+        <text>适宽</text>
+        <text class="chevron">›</text>
+      </button>
+
+      <view class="swatch-row wide">
+        <button class="swatch paper {{settings.theme === 'paper' ? 'active' : ''}}" bindtap="setTheme" data-theme="paper"></button>
+        <button class="swatch white {{settings.theme === 'white' ? 'active' : ''}}" bindtap="setTheme" data-theme="white"></button>
+        <button class="swatch sepia {{settings.theme === 'sepia' ? 'active' : ''}}" bindtap="setTheme" data-theme="sepia"></button>
+        <button class="swatch moon {{settings.theme === 'moon' ? 'active' : ''}}" bindtap="setTheme" data-theme="moon"></button>
+      </view>
+
+      <button class="setting-control" bindtap="setTheme" data-theme="{{settings.theme}}">
+        <text>背景</text>
+        <text class="chevron">›</text>
+      </button>
+
+      <view class="setting-control wide segment">
+        <button class="{{settings.pageGap === 8 ? 'selected' : ''}}" bindtap="setGapPreset" data-gap="8">紧凑</button>
+        <button class="{{settings.pageGap === 16 ? 'selected' : ''}}" bindtap="setGapPreset" data-gap="16">标准</button>
+        <button class="{{settings.pageGap === 28 ? 'selected' : ''}}" bindtap="setGapPreset" data-gap="28">宽松</button>
+      </view>
+
+      <button class="setting-control" bindtap="setGapPreset" data-gap="{{settings.pageGap}}">
+        <text>间距</text>
+        <text class="chevron">›</text>
+      </button>
+    </view>
+
+    <view class="settings-footer">
+      <button class="footer-action" bindtap="toggleAutoScroll">
+        <text>{{settings.autoScroll ? '关闭自动阅读' : '开启自动阅读'}}</text>
+        <text class="play-icon">{{settings.autoScroll ? 'Ⅱ' : '▶'}}</text>
+      </button>
+      <view class="footer-divider"></view>
+      <view class="speed-wrap">
+        <text>速度</text>
+        <slider
+          min="10"
+          max="60"
+          value="{{settings.autoSpeed}}"
+          activeColor="#202120"
+          backgroundColor="#d9d5cc"
+          block-size="18"
+          bindchange="changeAutoSpeed"
+        />
+      </view>
+    </view>
+  </view>
+</view>

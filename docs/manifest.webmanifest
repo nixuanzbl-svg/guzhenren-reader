@@ -1,0 +1,20 @@
+{
+  "name": "蛊真人漫画阅读器",
+  "short_name": "蛊真人",
+  "description": "可安装的漫画 PDF 阅读器，支持章节书架、阅读进度和本地缓存。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eeece5",
+  "theme_color": "#151515",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["books", "entertainment"]
+}

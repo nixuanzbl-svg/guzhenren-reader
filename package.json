@@ -1,0 +1,13 @@
+{
+  "name": "guzhenren-reader",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A WeChat Mini Program comic reader for imported PDF comics.",
+  "scripts": {
+    "build:static": "node tools/build-static-site.cjs",
+    "check": "node tools/check-js.cjs && node --check web/app.js && node --check web/admin.js && node --check web/sw.js && node --check tools/build-static-site.cjs"
+  },
+  "dependencies": {
+    "pdfjs-dist": "2.16.105"
+  }
+}

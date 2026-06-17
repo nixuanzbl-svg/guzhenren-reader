@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151515">
+  <meta name="description" content="可安装的蛊真人漫画 PDF 阅读器，支持章节书架、阅读进度和本地缓存。">
+  <title>蛊真人漫画阅读器</title>
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css?v=mobile-scroll-20260605-1">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <section id="libraryView" class="library-view" aria-label="漫画书架">
+      <header class="app-topbar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">蛊</div>
+          <div class="brand-copy">
+            <h1>蛊真人漫画</h1>
+            <p id="shelfMeta">本地书架</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <div class="view-switcher">
+            <button id="viewModeButton" class="icon-button view-mode-button" type="button" aria-label="切换书架显示模式" aria-haspopup="true" aria-expanded="false">
+              <span class="view-mode-icon" aria-hidden="true"></span>
+            </button>
+            <div id="viewModeMenu" class="view-mode-menu" role="menu" hidden>
+              <button class="view-mode-option" type="button" role="menuitemradio" data-view-mode="icon">
+                <span>图标</span>
+                <span class="view-mode-check" aria-hidden="true"></span>
+              </button>
+              <button class="view-mode-option" type="button" role="menuitemradio" data-view-mode="list">
+                <span>列表</span>
+                <span class="view-mode-check" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+          <button id="resumeButton" class="ghost-button" type="button" hidden>继续阅读</button>
+          <button id="installButton" class="ghost-button" type="button" hidden>安装应用</button>
+          <button id="refreshButton" class="ghost-button" type="button">刷新章节</button>
+        </div>
+      </header>
+
+      <main class="library-main">
+        <section id="continueSection" class="continue-section" hidden>
+          <div class="section-label">继续阅读</div>
+          <button id="continueCard" class="continue-card" type="button"></button>
+        </section>
+
+        <section class="shelf-section" aria-labelledby="shelfTitle">
+          <div class="section-heading">
+            <h2 id="shelfTitle">书架</h2>
+            <div id="storageMeta" class="section-meta">0 本</div>
+          </div>
+          <div id="bookGrid" class="book-grid"></div>
+          <div id="emptyState" class="empty-state">
+            <div class="empty-cover" aria-hidden="true">PDF</div>
+            <h2>暂无漫画章节</h2>
+            <p>开发者添加 PDF 后，刷新即可同步章节。</p>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <section id="readerView" class="reader-view" aria-label="漫画阅读页" hidden>
+      <header class="reader-topbar">
+        <button id="backToShelfButton" class="icon-button" type="button" aria-label="返回书架">&#8592;</button>
+        <div class="reader-title-block">
+          <div id="readerTitle" class="reader-title">漫画</div>
+          <div id="readerMeta" class="reader-meta">第 1 / 1 页 · 0%</div>
+        </div>
+        <div class="reader-actions">
+          <button id="jumpStartButton" class="toolbar-button" type="button">开头</button>
+          <button id="jumpEndButton" class="toolbar-button" type="button">末尾</button>
+          <button id="chapterSelectButton" class="toolbar-button" type="button">章节</button>
+          <button id="settingsButton" class="icon-button" type="button" aria-label="阅读设置">&#9881;</button>
+        </div>
+      </header>
+      <div class="reader-progress-track" aria-hidden="true">
+        <div id="readerProgressBar" class="reader-progress-value"></div>
+      </div>
+
+      <div id="readerScroll" class="reader-scroll">
+        <div id="readerLoading" class="reader-loading">
+          <div class="loading-mark">PDF</div>
+          <p>正在打开漫画</p>
+        </div>
+        <div id="pagesContainer" class="pages-container"></div>
+      </div>
+
+      <div id="brightnessLayer" class="brightness-layer" aria-hidden="true"></div>
+      <button id="prevChapterButton" class="chapter-float chapter-prev" type="button">上一章</button>
+      <button id="nextChapterButton" class="chapter-float chapter-next" type="button">下一章</button>
+      <div id="settingsBackdrop" class="settings-backdrop" hidden></div>
+      <aside id="settingsPanel" class="settings-panel" aria-label="阅读设置" aria-hidden="true">
+        <div class="settings-header">
+          <h2>阅读设置</h2>
+          <button id="closeSettingsButton" class="icon-button compact" type="button" aria-label="关闭设置">×</button>
+        </div>
+
+        <div class="settings-grid">
+          <label class="setting-row wide">
+            <span>亮度</span>
+            <input id="brightnessRange" type="range" min="55" max="100" value="92">
+          </label>
+
+          <button id="eyeCareToggle" class="setting-toggle" type="button">
+            <span>护眼</span>
+            <span class="switch-mark" aria-hidden="true"></span>
+          </button>
+
+          <button id="nightToggle" class="setting-toggle" type="button">
+            <span>夜间</span>
+            <span class="switch-mark" aria-hidden="true"></span>
+          </button>
+
+          <label class="setting-row wide">
+            <span>页宽</span>
+            <input id="pageWidthRange" type="range" min="78" max="100" value="100">
+          </label>
+
+          <div class="setting-row wide">
+            <span>背景</span>
+            <div class="swatch-group" role="group" aria-label="背景主题">
+              <button class="swatch paper" type="button" data-theme="paper" aria-label="纸张背景"></button>
+              <button class="swatch white" type="button" data-theme="white" aria-label="白色背景"></button>
+              <button class="swatch green" type="button" data-theme="green" aria-label="护眼背景"></button>
+              <button class="swatch dark" type="button" data-theme="dark" aria-label="深色背景"></button>
+            </div>
+          </div>
+
+          <div class="setting-row wide">
+            <span>页距</span>
+            <div class="segment-group" role="group" aria-label="页面间距">
+              <button type="button" data-gap="10">紧凑</button>
+              <button type="button" data-gap="18">标准</button>
+              <button type="button" data-gap="30">宽松</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div id="chapterBackdrop" class="chapter-backdrop" hidden></div>
+      <aside id="chapterPanel" class="chapter-panel" aria-label="选择章节" aria-hidden="true" hidden>
+        <div class="chapter-panel-header">
+          <div>
+            <div class="section-label">目录</div>
+            <h2>选择章节</h2>
+          </div>
+          <button id="closeChapterButton" class="icon-button compact" type="button" aria-label="关闭章节目录">×</button>
+        </div>
+        <div class="chapter-panel-toolbar">
+          <button id="selectAllPanelButton" class="ghost-button small" type="button">全选</button>
+          <button id="cachePanelButton" class="primary-button small" type="button" disabled>缓存所选</button>
+          <button id="clearCurrentCacheButton" class="ghost-button small" type="button">清理本章缓存</button>
+        </div>
+        <div id="chapterList" class="chapter-list"></div>
+      </aside>
+    </section>
+
+    <div id="importOverlay" class="import-overlay" hidden>
+      <div class="import-box">
+        <div id="importText" class="import-text">正在导入</div>
+        <div class="import-track">
+          <div id="importBar" class="import-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <button id="processButton" class="process-fab" type="button" aria-label="打开创作过程" hidden>
+      <span class="process-fab-mark" aria-hidden="true"></span>
+      <span>过程</span>
+      <span id="processBadge" class="process-badge" hidden>0</span>
+    </button>
+
+    <div id="processBackdrop" class="process-backdrop" hidden></div>
+    <aside id="processPanel" class="process-panel" aria-label="创作过程" aria-hidden="true" hidden>
+      <div class="process-header">
+        <div>
+          <div class="section-label">实时记录</div>
+          <h2>创作过程</h2>
+        </div>
+        <button id="closeProcessButton" class="icon-button compact" type="button" aria-label="关闭过程面板">×</button>
+      </div>
+
+      <div id="processCurrent" class="process-current">
+        <div class="process-current-label">当前任务</div>
+        <div id="processCurrentTitle" class="process-current-title">等待操作</div>
+        <div id="processCurrentDetail" class="process-current-detail">导入或打开漫画后会显示实时步骤。</div>
+      </div>
+
+      <div class="process-stats" aria-label="过程概览">
+        <div>
+          <span>同步</span>
+          <strong id="processImportStat">空闲</strong>
+        </div>
+        <div>
+          <span>渲染</span>
+          <strong id="processRenderStat">尚未阅读</strong>
+        </div>
+        <div>
+          <span>缓存</span>
+          <strong id="processCacheStat">等待导入</strong>
+        </div>
+      </div>
+
+      <div class="process-toolbar">
+        <div id="processSummary" class="process-summary">0 条记录</div>
+        <button id="clearProcessButton" class="ghost-button small" type="button">清空记录</button>
+      </div>
+
+      <ol id="processTimeline" class="process-timeline"></ol>
+      <div id="processEmpty" class="process-empty">
+        <div class="empty-cover" aria-hidden="true">LOG</div>
+        <p>还没有过程记录。</p>
+      </div>
+    </aside>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="./vendor/pdfjs/pdf.min.js"></script>
+  <script>window.GUZHENREN_STATIC_BUILD = false;</script>
+  <script src="./app.js?v=mobile-scroll-20260605-1"></script>
+</body>
+</html>

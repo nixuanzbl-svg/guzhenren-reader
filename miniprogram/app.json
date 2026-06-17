@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/library/library",
+    "pages/reader/reader"
+  ],
+  "window": {
+    "backgroundColor": "#f4f2ed",
+    "backgroundTextStyle": "dark",
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

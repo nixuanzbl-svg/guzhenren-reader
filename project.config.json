@@ -1,0 +1,18 @@
+{
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "libVersion": "3.8.12",
+  "miniprogramRoot": "miniprogram/",
+  "projectname": "guzhenren-reader",
+  "setting": {
+    "enhance": true,
+    "es6": true,
+    "ignoreUploadUnusedFiles": true,
+    "minified": true,
+    "minifyWXML": true,
+    "minifyWXSS": true,
+    "postcss": true,
+    "urlCheck": false
+  },
+  "condition": {}
+}

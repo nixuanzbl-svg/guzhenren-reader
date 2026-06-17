@@ -1,0 +1,499 @@
+.reader-page {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  background: #f4f2ed;
+  color: #222222;
+}
+
+.theme-white {
+  background: #fbfbfb;
+}
+
+.theme-paper {
+  background: #f4f2ed;
+}
+
+.theme-sepia {
+  background: #efe0c9;
+}
+
+.theme-moon {
+  background: #1c2021;
+}
+
+.night {
+  background: #17191a;
+  color: #f0eee7;
+}
+
+.eye-care {
+  background: #edf0e3;
+}
+
+.reader-scroll {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+}
+
+.scroll-content {
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.page-shell {
+  position: relative;
+  overflow: hidden;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 4px;
+  background: #efede7;
+  box-shadow: 0 12rpx 34rpx rgba(32, 33, 32, 0.12);
+}
+
+.night .page-shell,
+.theme-moon .page-shell {
+  background: #2a2e30;
+  box-shadow: 0 12rpx 34rpx rgba(0, 0, 0, 0.36);
+}
+
+.pdf-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.page-state {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(242, 239, 231, 0.86);
+  color: #8a8376;
+  font-size: 24rpx;
+}
+
+.page-state.error {
+  color: #9b3f2f;
+}
+
+.reader-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  gap: 18rpx;
+  box-sizing: border-box;
+  height: 152rpx;
+  padding: 58rpx 28rpx 20rpx;
+  transform: translateY(-110%);
+  transition: transform 180ms ease;
+  background: rgba(250, 248, 242, 0.92);
+  box-shadow: 0 10rpx 30rpx rgba(40, 39, 34, 0.08);
+}
+
+.night .reader-top,
+.theme-moon .reader-top {
+  background: rgba(24, 26, 27, 0.94);
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.34);
+}
+
+.reader-top.visible {
+  transform: translateY(0);
+}
+
+.icon-button,
+.text-button {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 70rpx;
+  height: 64rpx;
+  border-radius: 8px;
+  background: rgba(32, 33, 32, 0.08);
+  color: #222222;
+  font-weight: 800;
+}
+
+.icon-button {
+  font-size: 52rpx;
+  line-height: 1;
+}
+
+.text-button {
+  font-size: 23rpx;
+}
+
+.night .icon-button,
+.night .text-button,
+.theme-moon .icon-button,
+.theme-moon .text-button {
+  background: rgba(244, 241, 233, 0.12);
+  color: #f2eee8;
+}
+
+.title-wrap {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.reader-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.reader-progress {
+  margin-top: 6rpx;
+  color: #837e74;
+  font-size: 22rpx;
+}
+
+.night .reader-progress,
+.theme-moon .reader-progress {
+  color: #aaa59b;
+}
+
+.reader-bottom {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  box-sizing: border-box;
+  padding: 18rpx 44rpx calc(18rpx + env(safe-area-inset-bottom));
+  transform: translateY(118%);
+  transition: transform 180ms ease;
+  background: rgba(250, 248, 242, 0.94);
+  box-shadow: 0 -10rpx 30rpx rgba(40, 39, 34, 0.08);
+}
+
+.reader-bottom.visible {
+  transform: translateY(0);
+}
+
+.night .reader-bottom,
+.theme-moon .reader-bottom {
+  background: rgba(24, 26, 27, 0.94);
+  box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.34);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 6rpx;
+  justify-content: center;
+  color: #232323;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.night .nav-item,
+.theme-moon .nav-item {
+  color: #ede9df;
+}
+
+.nav-icon {
+  font-size: 46rpx;
+  line-height: 1;
+}
+
+.brightness-layer {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.fallback {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 70vh;
+  padding: 70rpx 52rpx;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.fallback-title {
+  color: #222222;
+  font-size: 36rpx;
+  font-weight: 800;
+}
+
+.fallback-body {
+  max-width: 560rpx;
+  margin-top: 18rpx;
+  color: #7d786e;
+  font-size: 25rpx;
+  line-height: 1.6;
+}
+
+.fallback-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300rpx;
+  height: 86rpx;
+  margin-top: 34rpx;
+  border-radius: 8px;
+  background: #202120;
+  color: #f8f3ea;
+  font-size: 27rpx;
+  font-weight: 800;
+}
+
+.settings-mask {
+  position: fixed;
+  z-index: 18;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.settings-panel {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  padding: 34rpx 34rpx calc(28rpx + env(safe-area-inset-bottom));
+  transform: translateY(110%);
+  transition: transform 200ms ease;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: #f4f3f0;
+  color: #222222;
+  box-shadow: 0 -18rpx 58rpx rgba(32, 33, 32, 0.16);
+}
+
+.settings-panel.visible {
+  transform: translateY(0);
+}
+
+.night .settings-panel,
+.theme-moon .settings-panel {
+  background: #222628;
+  color: #eeeae1;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24rpx;
+}
+
+.setting-control,
+.swatch-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 92rpx;
+  border-radius: 8px;
+  background: #e9e7e2;
+  color: #62615d;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.wide {
+  grid-column: span 1;
+}
+
+.setting-control.wide,
+.swatch-row.wide {
+  min-width: 0;
+}
+
+.control-symbol {
+  width: 54rpx;
+  color: #77746c;
+  text-align: center;
+  font-size: 36rpx;
+}
+
+.setting-control slider {
+  flex: 1;
+}
+
+.switch {
+  width: 46rpx;
+  height: 46rpx;
+  margin-left: 16rpx;
+  border-radius: 8px;
+  background: #d5d3cf;
+}
+
+.switch.on {
+  background: #71816b;
+  box-shadow: inset 0 0 0 10rpx rgba(255, 255, 255, 0.22);
+}
+
+.font-control {
+  justify-content: space-around;
+}
+
+.font-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92rpx;
+  height: 74rpx;
+  border-radius: 8px;
+  color: #55534e;
+  font-size: 38rpx;
+  font-weight: 800;
+}
+
+.font-mark.small {
+  font-size: 30rpx;
+}
+
+.font-value {
+  color: #8f8b82;
+  font-size: 24rpx;
+}
+
+.chevron {
+  margin-left: 12rpx;
+  color: #aaa69d;
+  font-size: 42rpx;
+}
+
+.swatch-row {
+  gap: 22rpx;
+  background: transparent;
+}
+
+.swatch {
+  width: 84rpx;
+  height: 84rpx;
+  border: 4rpx solid transparent;
+  border-radius: 50%;
+}
+
+.swatch.active {
+  border-color: #62615d;
+}
+
+.swatch.paper {
+  background: #f4f2ed;
+}
+
+.swatch.white {
+  background: #fbfbfb;
+}
+
+.swatch.sepia {
+  background: linear-gradient(145deg, #ead9be, #c4773b);
+}
+
+.swatch.moon {
+  background: linear-gradient(145deg, #1e2424, #82898b);
+}
+
+.segment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  overflow: hidden;
+  padding: 8rpx;
+}
+
+.segment button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 74rpx;
+  border-radius: 8px;
+  color: #96928a;
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.segment button.selected {
+  background: #fffdf8;
+  color: #252525;
+}
+
+.settings-footer {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1rpx 1fr;
+  gap: 24rpx;
+  margin-top: 34rpx;
+}
+
+.footer-action {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  justify-content: center;
+  min-height: 86rpx;
+  color: #5e5b55;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.play-icon {
+  color: #b8b5ae;
+  font-size: 36rpx;
+}
+
+.footer-divider {
+  height: 62rpx;
+  background: #dedbd4;
+}
+
+.speed-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  color: #5e5b55;
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.speed-wrap slider {
+  flex: 1;
+}
+
+.night .setting-control,
+.night .segment,
+.theme-moon .setting-control,
+.theme-moon .segment {
+  background: #303537;
+  color: #d8d3c8;
+}
+
+.night .segment button.selected,
+.theme-moon .segment button.selected {
+  background: #454a4c;
+  color: #f2eee6;
+}
