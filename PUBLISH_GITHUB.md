@@ -28,6 +28,14 @@ powershell -ExecutionPolicy Bypass -File ".\tools\Publish-GitHubPages.ps1"
 
 脚本会重新生成 `docs/data/chapters.json`、复制 `D:\蛊真人漫画\pdf` 里的 PDF，并提交推送。重复章节会自动在书架里优先显示较新的 PDF。
 
+如果 `git push` 因网络中断失败，可以走备用 API 发布：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ".\tools\Publish-GitHubViaApi.ps1"
+```
+
+备用脚本会读取当前 Windows 凭据管理器里的 GitHub 登录令牌，只上传发生变化的文件，并自动尝试启用 GitHub Pages。
+
 ## 读者安装
 
 读者打开 GitHub Pages 地址后，可以用浏览器菜单里的“安装应用”“添加到主屏幕”或“创建快捷方式”安装。已经打开过的阅读器外壳会离线缓存；具体章节 PDF 会在读者打开或缓存章节后保存在自己的浏览器中。
