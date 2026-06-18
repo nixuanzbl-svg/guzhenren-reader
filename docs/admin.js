@@ -74,6 +74,24 @@
   }
 
   async function detectAdminMode() {
+    if (shouldUseGitHubAdmin()) {
+      state.mode = "github";
+      syncGitHubInputs();
+      if (!state.token) {
+        state.authenticated = false;
+        return;
+      }
+      try {
+        await verifyGitHubAccess();
+        state.authenticated = true;
+      } catch (error) {
+        console.warn("Saved GitHub token is unavailable", error);
+        state.authenticated = false;
+        toast("GitHub 登录已失效，请重新连接。");
+      }
+      return;
+    }
+
     try {
       var response = await fetch("/api/admin/session", {
         cache: "no-store",
@@ -104,6 +122,13 @@
       state.authenticated = false;
       toast("GitHub 登录已失效，请重新连接。");
     }
+  }
+
+  function shouldUseGitHubAdmin() {
+    var host = String(location.hostname || "").toLowerCase();
+    return location.protocol === "file:" ||
+      host === "appassets.androidplatform.net" ||
+      /\.github\.io$/.test(host);
   }
 
   function contentTypeIsJson(response) {
