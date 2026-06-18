@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "source": "github-pages-static",
-  "generatedAt": "2026-06-18T02:32:45.024Z",
-  "updatedAt": "2026-06-17T12:48:18.587Z",
-  "version": "93-1781700498587-63e23ec5dfd8",
-  "totalPdfFiles": 93,
+  "generatedAt": "2026-06-18T06:09:58.230Z",
+  "updatedAt": "2026-06-18T06:09:58.224Z",
+  "version": "94-1781762998224-3cfa87ab264b",
+  "totalPdfFiles": 94,
   "chapters": [
     {
       "id": "chapter-1",
@@ -1028,6 +1028,17 @@
       "pdfUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%B8%89%E7%AB%A0_%E5%B0%8F%E5%85%BD%E6%BD%AE.pdf",
       "downloadUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%B8%89%E7%AB%A0_%E5%B0%8F%E5%85%BD%E6%BD%AE.pdf",
       "checksum": "17b0e86a0e55c0a97badbd53950b3dd0346f1dee"
+    },
+    {
+      "id": "chapter-94",
+      "chapterNumber": 94,
+      "title": "第九十四章 忽然收力",
+      "fileName": "第九十四章_忽然收力.pdf",
+      "size": 2180515,
+      "mtime": 1781762998224,
+      "pdfUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E5%9B%9B%E7%AB%A0_%E5%BF%BD%E7%84%B6%E6%94%B6%E5%8A%9B.pdf",
+      "downloadUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E5%9B%9B%E7%AB%A0_%E5%BF%BD%E7%84%B6%E6%94%B6%E5%8A%9B.pdf",
+      "checksum": "a498b1b45548311bb51a96e1e337bfd33cfe13a1"
     }
   ],
   "omittedDuplicateChapters": []
