@@ -11,6 +11,7 @@
   var SETTINGS_KEY = "reader";
   var API_CATALOG_URL = "/api/chapters";
   var STATIC_CATALOG_URL = "./data/chapters.json";
+  var ANDROID_ASSET_HOST = "appassets.androidplatform.net";
   var PDF_OPTIONS_BASE = {
     disableAutoFetch: false,
     disableFontFace: false,
@@ -45,7 +46,6 @@
     currentPdf: null,
     currentVisibleBookId: "",
     db: null,
-    deferredInstallPrompt: null,
     lastSaveAt: 0,
     lastPositionLogAt: 0,
     loadedBookIds: new Set(),
@@ -80,7 +80,6 @@
   async function init() {
     collectElements();
     bindEvents();
-    updateInstallButton();
     registerServiceWorker();
 
     if (!window.pdfjsLib) {
@@ -110,7 +109,6 @@
     el.cachePanelButton = document.getElementById("cachePanelButton");
     el.clearCurrentCacheButton = document.getElementById("clearCurrentCacheButton");
     el.resumeButton = document.getElementById("resumeButton");
-    el.installButton = document.getElementById("installButton");
     el.libraryView = document.getElementById("libraryView");
     el.readerView = document.getElementById("readerView");
     el.shelfMeta = document.getElementById("shelfMeta");
@@ -172,9 +170,6 @@
       el.refreshButton.addEventListener("click", function () {
         refreshLibrary(true);
       });
-    }
-    if (el.installButton) {
-      el.installButton.addEventListener("click", installApp);
     }
     if (el.selectAllPanelButton) {
       el.selectAllPanelButton.addEventListener("click", toggleAllCacheSelection);
@@ -285,16 +280,6 @@
     window.addEventListener("pagehide", function () {
       persistPosition(true);
     });
-    window.addEventListener("beforeinstallprompt", function (event) {
-      event.preventDefault();
-      state.deferredInstallPrompt = event;
-      updateInstallButton();
-    });
-    window.addEventListener("appinstalled", function () {
-      state.deferredInstallPrompt = null;
-      updateInstallButton();
-      toast("应用已安装。");
-    });
     document.addEventListener("click", function () {
       showViewModeMenu(false);
     });
@@ -309,29 +294,6 @@
         showSettings(false);
       }
     });
-  }
-
-  async function installApp() {
-    if (state.deferredInstallPrompt) {
-      var promptEvent = state.deferredInstallPrompt;
-      state.deferredInstallPrompt = null;
-      promptEvent.prompt();
-      try {
-        await promptEvent.userChoice;
-      } catch (error) {
-        console.warn(error);
-      }
-      updateInstallButton();
-      return;
-    }
-
-    toast("可在浏览器菜单中选择“安装应用”或“添加到主屏幕”。");
-  }
-
-  function updateInstallButton() {
-    if (!el.installButton) return;
-    var standalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
-    el.installButton.hidden = Boolean(standalone);
   }
 
   function chooseFiles() {
@@ -521,9 +483,7 @@
   }
 
   async function fetchChapterCatalog() {
-    var urls = shouldPreferStaticCatalog()
-      ? [STATIC_CATALOG_URL, API_CATALOG_URL]
-      : [API_CATALOG_URL, STATIC_CATALOG_URL];
+    var urls = catalogCandidateUrls();
     var errors = [];
 
     for (var index = 0; index < urls.length; index += 1) {
@@ -536,13 +496,43 @@
           errors.push(url + " 返回 " + response.status);
           continue;
         }
-        return normalizeCatalog(await response.json());
+        return normalizeCatalog(await response.json(), url);
       } catch (error) {
         errors.push(url + " " + errorMessage(error));
       }
     }
 
     throw new Error(errors.join("；") || "章节目录不可用");
+  }
+
+  function catalogCandidateUrls() {
+    var remoteUrl = getRemoteCatalogUrl();
+    var urls;
+    if (isAndroidAssetHost() && remoteUrl) {
+      urls = [remoteUrl, STATIC_CATALOG_URL];
+    } else if (shouldPreferStaticCatalog()) {
+      urls = remoteUrl ? [STATIC_CATALOG_URL, remoteUrl, API_CATALOG_URL] : [STATIC_CATALOG_URL, API_CATALOG_URL];
+    } else {
+      urls = remoteUrl ? [API_CATALOG_URL, STATIC_CATALOG_URL, remoteUrl] : [API_CATALOG_URL, STATIC_CATALOG_URL];
+    }
+    return uniqueUrls(urls);
+  }
+
+  function uniqueUrls(urls) {
+    var seen = new Set();
+    return urls.filter(function (url) {
+      if (!url || seen.has(url)) return false;
+      seen.add(url);
+      return true;
+    });
+  }
+
+  function getRemoteCatalogUrl() {
+    return String(window.GUZHENREN_REMOTE_CATALOG_URL || "").trim();
+  }
+
+  function isAndroidAssetHost() {
+    return location.hostname === ANDROID_ASSET_HOST;
   }
 
   function shouldPreferStaticCatalog() {
@@ -552,16 +542,51 @@
       (host && host !== "localhost" && host !== "127.0.0.1" && host !== "[::1]");
   }
 
-  function normalizeCatalog(catalog) {
+  function normalizeCatalog(catalog, catalogUrl) {
     if (!catalog || !Array.isArray(catalog.chapters)) {
       throw new Error("章节目录格式不正确");
     }
     catalog.chapters = catalog.chapters.map(function (chapter) {
       return Object.assign({}, chapter, {
+        downloadUrl: resolveCatalogResourceUrl(catalogUrl, chapter.downloadUrl || chapter.pdfUrl || ""),
+        pdfUrl: resolveCatalogResourceUrl(catalogUrl, chapter.pdfUrl || chapter.downloadUrl || ""),
         title: chapter.title || cleanPdfTitle(chapter.fileName || "漫画.pdf")
       });
     });
     return catalog;
+  }
+
+  function resolveCatalogResourceUrl(catalogUrl, value) {
+    if (!value || !isAbsoluteHttpUrl(catalogUrl) || isAbsoluteResourceUrl(value) || value.charAt(0) === "/") {
+      return value;
+    }
+    var baseUrl = catalogSiteBaseUrl(catalogUrl);
+    if (!baseUrl) return value;
+    try {
+      return new URL(value, baseUrl).href;
+    } catch (error) {
+      return value;
+    }
+  }
+
+  function catalogSiteBaseUrl(catalogUrl) {
+    var cleaned = String(catalogUrl || "").replace(/[?#].*$/, "");
+    if (/\/data\/chapters\.json$/i.test(cleaned)) {
+      return cleaned.replace(/\/data\/chapters\.json$/i, "/");
+    }
+    try {
+      return new URL("./", catalogUrl).href;
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function isAbsoluteHttpUrl(value) {
+    return /^https?:\/\//i.test(String(value || ""));
+  }
+
+  function isAbsoluteResourceUrl(value) {
+    return /^(https?:|blob:|data:)/i.test(String(value || ""));
   }
 
   function registerServiceWorker() {
@@ -670,6 +695,7 @@
 
   function renderContinueCard(book) {
     var position = normalizedPosition(book.id);
+    var displayProgress = displayProgressForPosition(position);
     el.continueCard.innerHTML = "";
     el.continueCard.appendChild(createCover(book, "continue-cover"));
 
@@ -680,13 +706,13 @@
     title.textContent = book.title;
 
     var meta = document.createElement("p");
-    meta.textContent = "第 " + (position.pageNumber || 1) + " 页 · " + formatPercent(position.progress || 0) + " · " + cacheStatusLabel(book.id);
+    meta.textContent = "第 " + (position.pageNumber || 1) + " 页 · " + formatPercent(displayProgress) + " · " + cacheStatusLabel(book.id);
 
     var track = document.createElement("div");
     track.className = "progress-track";
     var value = document.createElement("div");
     value.className = "progress-value";
-    value.style.width = formatPercent(position.progress || 0);
+    value.style.width = formatPercent(displayProgress);
     track.appendChild(value);
 
     info.appendChild(title);
@@ -700,6 +726,7 @@
 
   function createBookCard(book) {
     var position = normalizedPosition(book.id);
+    var displayProgress = displayProgressForPosition(position);
     var card = document.createElement("button");
     card.className = "book-card";
     card.type = "button";
@@ -720,12 +747,12 @@
     progress.className = "book-progress";
     var progressValue = document.createElement("div");
     progressValue.className = "progress-value";
-    progressValue.style.width = formatPercent(position.progress || 0);
+    progressValue.style.width = formatPercent(displayProgress);
     progress.appendChild(progressValue);
 
     var progressText = document.createElement("div");
     progressText.className = "book-progress-text";
-    progressText.textContent = formatPercent(position.progress || 0) + " · 上次第 " + (position.pageNumber || 1) + " 页 · " + cacheStatusLabel(book.id);
+    progressText.textContent = formatPercent(displayProgress) + " · 上次第 " + (position.pageNumber || 1) + " 页 · " + cacheStatusLabel(book.id);
 
     info.appendChild(title);
     info.appendChild(meta);
@@ -1257,6 +1284,7 @@
 
     state.chapterSequence.forEach(function (book) {
       var position = normalizedPosition(book.id);
+      var displayProgress = displayProgressForPosition(position);
       var option = document.createElement("div");
       option.className = "chapter-option";
       option.classList.toggle("active", book.id === state.currentVisibleBookId || (state.currentBook && book.id === state.currentBook.id));
@@ -1290,7 +1318,7 @@
 
       var status = document.createElement("div");
       status.className = "chapter-option-status";
-      status.textContent = formatPercent(position.progress || 0);
+      status.textContent = formatPercent(displayProgress);
 
       main.appendChild(title);
       main.appendChild(meta);
@@ -1748,6 +1776,7 @@
     var currentBook = pageInfo ? getBookById(pageInfo.bookId) : state.currentBook;
     var metrics = currentBook ? chapterScrollMetrics(currentBook.id) : null;
     var progress = metrics ? chapterProgressFromScroll(scrollTop, metrics) : 0;
+    var displayProgress = currentBook ? rememberMaxProgress(currentBook.id, progress) : progress;
     var pageNumber = pageInfo ? pageInfo.pageNumber : 1;
     var totalPages = Math.max(1, currentBook ? currentBook.pageCount || countPagesForBook(currentBook.id) : 1);
 
@@ -1761,8 +1790,8 @@
       renderChapterList();
     }
 
-    el.readerMeta.textContent = "第 " + pageNumber + " / " + totalPages + " 页 · " + formatPercent(progress);
-    el.readerProgressBar.style.width = formatPercent(progress);
+    el.readerMeta.textContent = "第 " + pageNumber + " / " + totalPages + " 页 · " + formatPercent(displayProgress);
+    el.readerProgressBar.style.width = formatPercent(displayProgress);
   }
 
   function pageNumberFromScroll(scrollTop) {
@@ -1802,10 +1831,12 @@
     var metrics = chapterScrollMetrics(book.id);
     var localScrollTop = metrics ? Math.max(0, Math.round(scrollTop - metrics.top)) : scrollTop;
     var progress = metrics ? chapterProgressFromScroll(scrollTop, metrics) : 0;
+    var maxProgress = Math.max(displayProgressForPosition(state.positions[book.id]), progress);
     var position = {
       bookId: book.id,
       pageNumber: pageInfo ? pageInfo.pageNumber : pageNumberFromScroll(scrollTop),
       progress: progress,
+      maxProgress: maxProgress,
       scrollTop: localScrollTop,
       updatedAt: now
     };
@@ -1818,7 +1849,7 @@
       await putValue(POSITION_STORE, position);
       if (force || now - state.lastPositionLogAt > 4500) {
         state.lastPositionLogAt = now;
-        addProcessEvent("done", "保存阅读位置", "第 " + position.pageNumber + " 页 · " + formatPercent(position.progress));
+        addProcessEvent("done", "保存阅读位置", "第 " + position.pageNumber + " 页 · " + formatPercent(displayProgressForPosition(position)));
       }
     } catch (error) {
       console.warn(error);
@@ -2798,11 +2829,32 @@
   function normalizedPosition(bookId) {
     return state.positions[bookId] || {
       bookId: bookId,
+      maxProgress: 0,
       pageNumber: 1,
       progress: 0,
       scrollTop: 0,
       updatedAt: 0
     };
+  }
+
+  function displayProgressForPosition(position) {
+    if (!position) return 0;
+    return clamp(Math.max(Number(position.progress) || 0, Number(position.maxProgress) || 0), 0, 100);
+  }
+
+  function rememberMaxProgress(bookId, progress) {
+    var currentProgress = clamp(Number(progress) || 0, 0, 100);
+    if (!bookId) return currentProgress;
+
+    var position = state.positions[bookId];
+    if (!position) {
+      position = normalizedPosition(bookId);
+      state.positions[bookId] = position;
+    }
+
+    var maxProgress = Math.max(displayProgressForPosition(position), currentProgress);
+    position.maxProgress = maxProgress;
+    return maxProgress;
   }
 
   function compareBooks(left, right) {

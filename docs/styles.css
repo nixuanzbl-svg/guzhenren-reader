@@ -1531,6 +1531,13 @@ input:focus-visible {
   align-items: end;
 }
 
+.admin-config-grid {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .admin-field {
   display: grid;
   gap: 8px;
@@ -1544,6 +1551,7 @@ input:focus-visible {
 }
 
 .admin-field input[type="password"],
+.admin-field input[type="text"],
 .admin-field input[type="file"] {
   min-height: 42px;
   width: 100%;
@@ -1553,6 +1561,14 @@ input:focus-visible {
   border-radius: var(--radius);
   background: #fffefa;
   color: var(--ink);
+}
+
+.admin-inline-meta {
+  margin: -4px 0 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
 }
 
 .admin-progress {
@@ -1625,6 +1641,11 @@ input:focus-visible {
 
   .view-switcher {
     justify-content: flex-start;
+  }
+
+  .view-mode-menu {
+    left: 0;
+    right: auto;
   }
 
   .continue-card {
@@ -1737,6 +1758,7 @@ input:focus-visible {
   }
 
   .admin-form,
+  .admin-config-grid,
   .admin-chapter-row {
     grid-template-columns: 1fr;
   }

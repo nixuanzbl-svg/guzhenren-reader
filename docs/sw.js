@@ -1,11 +1,14 @@
-const CACHE_NAME = "guzhenren-reader-v1";
+const CACHE_NAME = "guzhenren-reader-icon-refresh-20260617-1";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./icons/icon.svg",
+  "./icons/favicon-64.png",
+  "./icons/apple-touch-icon.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
   "./vendor/pdfjs/pdf.min.js",
   "./vendor/pdfjs/pdf.worker.min.js"
 ];

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151515">
+  <title>蛊真人漫画开发者管理</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css?v=dual-mode-20260605">
+</head>
+<body>
+  <div id="app" class="app-shell admin-shell">
+    <section class="library-view" aria-label="开发者管理">
+      <header class="app-topbar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">管</div>
+          <div class="brand-copy">
+            <h1>开发者管理</h1>
+            <p id="adminMeta">连接发布仓库后可添加 PDF 章节</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <a class="ghost-button link-button" href="./">返回阅读器</a>
+          <button id="refreshAdminButton" class="ghost-button" type="button">刷新章节</button>
+        </div>
+      </header>
+
+      <main class="library-main admin-main">
+        <section id="loginPanel" class="admin-panel">
+          <div class="section-heading">
+            <h2 id="loginTitle">开发者登录</h2>
+          </div>
+          <form id="loginForm" class="admin-form">
+            <div id="githubConfigFields" class="admin-config-grid" hidden>
+              <label class="admin-field">
+                <span>GitHub 用户/组织</span>
+                <input id="ownerInput" type="text" autocomplete="username" required>
+              </label>
+              <label class="admin-field">
+                <span>仓库名</span>
+                <input id="repoInput" type="text" autocomplete="off" required>
+              </label>
+              <label class="admin-field">
+                <span>分支</span>
+                <input id="branchInput" type="text" autocomplete="off" required>
+              </label>
+            </div>
+            <label class="admin-field">
+              <span id="passwordLabel">开发者口令</span>
+              <input id="passwordInput" type="password" autocomplete="current-password" required>
+            </label>
+            <button id="loginButton" class="primary-button" type="submit">登录</button>
+          </form>
+        </section>
+
+        <section id="adminPanel" class="admin-panel" hidden>
+          <div class="section-heading">
+            <h2>添加 PDF 章节</h2>
+            <div id="chapterCountMeta" class="section-meta">0 章</div>
+          </div>
+          <div id="publishMeta" class="admin-inline-meta"></div>
+          <form id="uploadForm" class="admin-form">
+            <label class="admin-field wide">
+              <span>PDF 文件</span>
+              <input id="pdfInput" type="file" accept="application/pdf,.pdf" multiple>
+            </label>
+            <button id="uploadButton" class="primary-button" type="submit">上传 PDF</button>
+          </form>
+          <div class="import-track admin-progress">
+            <div id="uploadBar" class="import-bar"></div>
+          </div>
+          <div id="uploadResult" class="admin-result">等待上传。</div>
+        </section>
+
+        <section class="shelf-section" aria-labelledby="adminShelfTitle">
+          <div class="section-heading">
+            <h2 id="adminShelfTitle">当前章节</h2>
+            <div id="adminStorageMeta" class="section-meta">正在读取</div>
+          </div>
+          <div id="adminChapterList" class="admin-chapter-list"></div>
+        </section>
+      </main>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <script src="./admin.js?v=dual-mode-20260605"></script>
+</body>
+</html>

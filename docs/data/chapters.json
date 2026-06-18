@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "source": "github-pages-static",
-  "generatedAt": "2026-06-17T04:01:40.005Z",
-  "updatedAt": "2026-06-17T02:48:52.043Z",
-  "version": "91-1781664532043-0702c8167a44",
-  "totalPdfFiles": 92,
+  "generatedAt": "2026-06-18T02:32:45.024Z",
+  "updatedAt": "2026-06-17T12:48:18.587Z",
+  "version": "93-1781700498587-63e23ec5dfd8",
+  "totalPdfFiles": 93,
   "chapters": [
     {
       "id": "chapter-1",
@@ -933,13 +933,13 @@
     {
       "id": "chapter-85",
       "chapterNumber": 85,
-      "title": "第八十五章 热血和冷血！！ 修正版",
-      "fileName": "第八十五章_热血和冷血！！_修正版.pdf",
-      "size": 1336193,
-      "mtime": 1781070717971,
-      "pdfUrl": "./pdf/%E7%AC%AC%E5%85%AB%E5%8D%81%E4%BA%94%E7%AB%A0_%E7%83%AD%E8%A1%80%E5%92%8C%E5%86%B7%E8%A1%80%EF%BC%81%EF%BC%81_%E4%BF%AE%E6%AD%A3%E7%89%88.pdf",
-      "downloadUrl": "./pdf/%E7%AC%AC%E5%85%AB%E5%8D%81%E4%BA%94%E7%AB%A0_%E7%83%AD%E8%A1%80%E5%92%8C%E5%86%B7%E8%A1%80%EF%BC%81%EF%BC%81_%E4%BF%AE%E6%AD%A3%E7%89%88.pdf",
-      "checksum": "8b16c1faa2dc80f5ab97eff7c4b6d8ee57c7c906"
+      "title": "第八十五章 热血和冷血！！",
+      "fileName": "第八十五章_热血和冷血！！.pdf",
+      "size": 1474794,
+      "mtime": 1780918957797,
+      "pdfUrl": "./pdf/%E7%AC%AC%E5%85%AB%E5%8D%81%E4%BA%94%E7%AB%A0_%E7%83%AD%E8%A1%80%E5%92%8C%E5%86%B7%E8%A1%80%EF%BC%81%EF%BC%81.pdf",
+      "downloadUrl": "./pdf/%E7%AC%AC%E5%85%AB%E5%8D%81%E4%BA%94%E7%AB%A0_%E7%83%AD%E8%A1%80%E5%92%8C%E5%86%B7%E8%A1%80%EF%BC%81%EF%BC%81.pdf",
+      "checksum": "684f636b8acf3337b6df4e6e6dafe876b7fe980d"
     },
     {
       "id": "chapter-86",
@@ -1001,19 +1001,34 @@
       "chapterNumber": 91,
       "title": "第九十一章 方源，我们很担心你",
       "fileName": "第九十一章_方源，我们很担心你.pdf",
-      "size": 1954923,
-      "mtime": 1781664532043,
+      "size": 1953292,
+      "mtime": 1781669294714,
       "pdfUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%B8%80%E7%AB%A0_%E6%96%B9%E6%BA%90%EF%BC%8C%E6%88%91%E4%BB%AC%E5%BE%88%E6%8B%85%E5%BF%83%E4%BD%A0.pdf",
       "downloadUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%B8%80%E7%AB%A0_%E6%96%B9%E6%BA%90%EF%BC%8C%E6%88%91%E4%BB%AC%E5%BE%88%E6%8B%85%E5%BF%83%E4%BD%A0.pdf",
-      "checksum": "4f67ae09732b055908c0bdab8b1134576721d500"
+      "checksum": "4aa5805bc1cf9d6062c5d888f120ad7de9728b73"
+    },
+    {
+      "id": "chapter-92",
+      "chapterNumber": 92,
+      "title": "第九十二章 未来遥遥在望",
+      "fileName": "第九十二章_未来遥遥在望.pdf",
+      "size": 2055753,
+      "mtime": 1781679979911,
+      "pdfUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%BA%8C%E7%AB%A0_%E6%9C%AA%E6%9D%A5%E9%81%A5%E9%81%A5%E5%9C%A8%E6%9C%9B.pdf",
+      "downloadUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%BA%8C%E7%AB%A0_%E6%9C%AA%E6%9D%A5%E9%81%A5%E9%81%A5%E5%9C%A8%E6%9C%9B.pdf",
+      "checksum": "a81695f2a0d8ac280d7f617a8bb53b9a91010339"
+    },
+    {
+      "id": "chapter-93",
+      "chapterNumber": 93,
+      "title": "第九十三章 小兽潮",
+      "fileName": "第九十三章_小兽潮.pdf",
+      "size": 2212236,
+      "mtime": 1781700498587,
+      "pdfUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%B8%89%E7%AB%A0_%E5%B0%8F%E5%85%BD%E6%BD%AE.pdf",
+      "downloadUrl": "./pdf/%E7%AC%AC%E4%B9%9D%E5%8D%81%E4%B8%89%E7%AB%A0_%E5%B0%8F%E5%85%BD%E6%BD%AE.pdf",
+      "checksum": "17b0e86a0e55c0a97badbd53950b3dd0346f1dee"
     }
   ],
-  "omittedDuplicateChapters": [
-    {
-      "chapterNumber": 85,
-      "title": "第八十五章 热血和冷血！！",
-      "fileName": "第八十五章_热血和冷血！！.pdf",
-      "mtime": 1780918957797
-    }
-  ]
+  "omittedDuplicateChapters": []
 }

@@ -6,9 +6,10 @@
   <meta name="theme-color" content="#151515">
   <meta name="description" content="可安装的蛊真人漫画 PDF 阅读器，支持章节书架、阅读进度和本地缓存。">
   <title>蛊真人漫画阅读器</title>
-  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="./icons/favicon-64.png" sizes="64x64" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./styles.css?v=mobile-scroll-20260605-1">
+  <link rel="stylesheet" href="./styles.css?v=mobile-ui-progress-20260617-1">
 </head>
 <body>
   <div id="app" class="app-shell">
@@ -38,7 +39,6 @@
             </div>
           </div>
           <button id="resumeButton" class="ghost-button" type="button" hidden>继续阅读</button>
-          <button id="installButton" class="ghost-button" type="button" hidden>安装应用</button>
           <button id="refreshButton" class="ghost-button" type="button">刷新章节</button>
         </div>
       </header>
@@ -222,7 +222,10 @@
   </div>
 
   <script src="./vendor/pdfjs/pdf.min.js"></script>
-  <script>window.GUZHENREN_STATIC_BUILD = true;</script>
-  <script src="./app.js?v=mobile-scroll-20260605-1"></script>
+  <script>
+    window.GUZHENREN_STATIC_BUILD = true;
+    window.GUZHENREN_REMOTE_CATALOG_URL = "https://nixuanzbl-svg.github.io/guzhenren-reader/data/chapters.json";
+  </script>
+  <script src="./app.js?v=mobile-ui-progress-20260617-1"></script>
 </body>
 </html>
